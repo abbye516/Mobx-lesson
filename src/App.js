@@ -1,27 +1,35 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
-import { observer } from 'mobx-react';
+import './App.css'
+import { observer } from 'mobx-react'
+import DevTools from 'mobx-react-devtools';
 
 @observer
 class App extends Component {
+  checkItem = (e) => {
+    this.props.store.checkItem(e.target.value)
+  }
+  updateLocation = (e) => {
+    let location = prompt('Please enter updated location')
+    this.props.store.updateLocation(e.target.value, location)
+  }
+  deleteItem = (e) =>{
+    this.props.store.deleteItem(e.target.value)
+  }
   render() {
     return (
       <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <p>
-            Edit <code>src/App.js</code> and save to reload.
-          </p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-        </header>
+        <DevTools />
+        {this.props.store.list.map(i => {
+          return <div key={i.name}>
+            <input type="checkbox"
+              onClick={this.checkItem}
+              value={i.name} />
+            {i.completed ? <s>{i.name}</s> : <span>{i.name}-{i.location}</span>}
+            <button value={i.name} onClick={this.updateLocation}>edit</button>
+            <button value={i.name} onClick={this.deleteItem}>Delete</button>
+          </div>
+        }
+        )}
       </div>
     );
   }
